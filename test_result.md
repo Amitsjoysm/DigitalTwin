@@ -351,14 +351,12 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Voice Clone API Integration"
+    - "TTS with Cloned Voice"
+    - "Voice Recording Upload"
     - "Chat Message with Video Response"
     - "Video Response Display in Chat"
-    - "Avatar Upload with Image Extraction"
-    - "TTS Service Integration"
-    - "Storage Service for File Upload"
-  stuck_tasks: 
-    - "TTS Service Integration"
-    - "Chat Message with Video Response"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
