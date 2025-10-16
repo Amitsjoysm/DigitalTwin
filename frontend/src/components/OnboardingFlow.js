@@ -400,22 +400,111 @@ export const OnboardingFlow = ({ onComplete }) => {
               <Mic className="h-12 w-12 mx-auto text-primary" />
               <h3 className="text-2xl font-bold">Voice Training</h3>
               <p className="text-muted-foreground">
-                Voice cloning will be trained from your video automatically.
+                Read the following sentences to train your voice
               </p>
             </div>
-            <div className="bg-muted rounded-lg p-6 text-center">
-              <CheckCircle className="h-16 w-16 mx-auto mb-4 text-green-500" />
-              <p className="font-medium">Voice training in progress</p>
-              <p className="text-sm text-muted-foreground mt-1">
-                This happens automatically from your video
-              </p>
-            </div>
+            
+            {!voiceBlob ? (
+              <div className="space-y-4">
+                <div className="bg-muted rounded-lg p-6">
+                  <div className="text-center mb-4">
+                    {isRecordingVoice ? (
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-center gap-2">
+                          <Circle className="h-4 w-4 text-red-500 fill-red-500 animate-pulse" />
+                          <span className="text-lg font-medium">Recording...</span>
+                        </div>
+                        <div className="text-3xl font-mono">{formatTime(voiceRecordingTime)}</div>
+                        <Progress value={(voiceRecordingTime / 120) * 100} className="h-2" />
+                      </div>
+                    ) : (
+                      <div className="text-muted-foreground">
+                        Press start to begin recording
+                      </div>
+                    )}
+                  </div>
+                  
+                  {isRecordingVoice && (
+                    <div className="bg-background rounded-lg p-4 mt-4">
+                      <div className="text-xs text-muted-foreground mb-2">
+                        Text {currentTextIndex + 1} of {readingTexts.length}
+                      </div>
+                      <p className="text-lg text-center font-medium">
+                        "{readingTexts[currentTextIndex]}"
+                      </p>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="bg-muted rounded-lg p-4">
+                  <h4 className="font-medium mb-2 text-sm">Preview Texts:</h4>
+                  <div className="space-y-1 text-xs text-muted-foreground max-h-32 overflow-y-auto">
+                    {readingTexts.slice(0, 5).map((text, idx) => (
+                      <p key={idx}>• {text}</p>
+                    ))}
+                    <p className="text-xs opacity-60">...and {readingTexts.length - 5} more</p>
+                  </div>
+                </div>
+                
+                <div className="flex gap-2">
+                  {!isRecordingVoice ? (
+                    <Button
+                      onClick={handleStartVoiceRecording}
+                      className="flex-1"
+                      data-testid="start-voice-recording-button"
+                    >
+                      <Mic className="h-4 w-4 mr-2" />
+                      Start Recording
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={handleStopVoiceRecording}
+                      variant="destructive"
+                      className="flex-1"
+                      data-testid="stop-voice-recording-button"
+                    >
+                      <Square className="h-4 w-4 mr-2" />
+                      Stop Recording
+                    </Button>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
+                  <CheckCircle className="h-16 w-16 mx-auto mb-4 text-green-500" />
+                  <p className="font-medium text-green-900">Voice recorded successfully!</p>
+                  <p className="text-sm text-green-700 mt-1">
+                    Duration: {formatTime(voiceRecordingTime)}
+                  </p>
+                </div>
+                
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setVoiceBlob(null);
+                      setVoiceRecordingTime(0);
+                      setCurrentTextIndex(0);
+                    }}
+                    className="flex-1"
+                  >
+                    Re-record
+                  </Button>
+                  <Button 
+                    onClick={nextStep} 
+                    className="flex-1"
+                    data-testid="step-3-next-button"
+                  >
+                    Continue
+                  </Button>
+                </div>
+              </div>
+            )}
+            
             <div className="flex gap-2">
               <Button variant="outline" onClick={prevStep} className="flex-1">
                 Back
-              </Button>
-              <Button onClick={nextStep} className="flex-1" data-testid="step-3-next-button">
-                Continue
               </Button>
             </div>
           </div>
