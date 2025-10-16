@@ -54,15 +54,10 @@ export const OnboardingFlow = ({ onComplete }) => {
   
   const readingTexts = [
     "Hello, I am creating my digital self today.",
-    "Technology has transformed the way we communicate.",
-    "I enjoy exploring new ideas and learning every day.",
     "The quick brown fox jumps over the lazy dog.",
-    "Artificial intelligence is reshaping our future.",
-    "I believe in the power of human creativity.",
-    "Every conversation is an opportunity to connect.",
-    "Life is a beautiful journey of discovery.",
-    "Innovation starts with asking the right questions.",
-    "Together we can build amazing things."
+    "Technology is amazing and constantly evolving.",
+    "I enjoy learning new things every single day.",
+    "One, two, three, four, five, six, seven, eight."
   ];
   
   // Step 4: Personality
