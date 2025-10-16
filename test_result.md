@@ -428,6 +428,56 @@ agent_communication:
       🎯 INTEGRATION STATUS:
       All Newport AI integrations are correctly implemented and functional.
       The system is ready for production use, though may need paid Newport AI tier for consistent video generation.
+
+  - agent: "main"
+    message: |
+      🎤 VOICE CLONING IMPLEMENTATION COMPLETE!
+      
+      ✅ User Request: "Use the uploaded voice so that LLM will interact with me in the same voice as me"
+      
+      ✅ What Was Implemented:
+      
+      **Backend Changes:**
+      1. **Voice Clone Service** (services/tts_service.py):
+         - Added clone_voice() - Calls Newport AI /api/async/voice_clone with voice URL
+         - Added check_voice_clone_status() - Polls for cloneId completion
+         - Added text_to_speech_with_clone() - Uses Do TTS Clone API with cloneId
+         - Keeps original text_to_speech() as fallback for default voice
+      
+      2. **Voice Routes** (routes/voice_routes.py) - NEW FILE:
+         - POST /api/voices/upload - Upload voice sample, triggers voice cloning
+         - GET /api/voices/clone-status/{task_id} - Poll clone status, auto-updates user.voice_id
+         - GET /api/voices/my-voice - Get user's cloned voice ID
+      
+      3. **Chat Integration** (routes/chat_routes.py):
+         - Updated to check if user.voice_id exists
+         - If exists: Uses text_to_speech_with_clone() with user's voice
+         - If not: Falls back to default voice with text_to_speech()
+      
+      **Frontend Changes:**
+      1. **Onboarding Flow** (components/OnboardingFlow.js):
+         - Fixed Step 3 voice recording - was recording but NEVER uploading
+         - Added handleVoiceUpload() function
+         - Changed button to "Upload & Continue" - now uploads voice blob as webm
+         - Shows loading state during upload and cloning
+      
+      2. **API Service** (services/api.js):
+         - Added avatarAPI.uploadVoice() - POST to /api/voices/upload
+         - Added avatarAPI.getVoiceStatus() - Poll clone status
+      
+      🔄 Complete Flow Now:
+      1. Onboarding Step 2: User records video → Avatar image extracted → Stored
+      2. Onboarding Step 3: User records voice (~50s) → Uploads to backend → Newport AI clones voice → cloneId stored in user.voice_id
+      3. Chat: User sends message → LLM responds → TTS with YOUR cloned voice → Video with YOUR avatar face → User SEES and HEARS their digital self!
+      
+      ⚠️ Ready for Testing:
+      - Voice upload endpoint needs testing
+      - Voice clone polling needs testing
+      - TTS with cloned voice needs testing
+      - Full flow: onboarding → chat → video with cloned voice
+      
+      🎯 Next Steps:
+      Test backend endpoints for voice cloning flow to ensure Newport AI Voice Clone API works correctly.
   
   - agent: "testing"
     message: |
