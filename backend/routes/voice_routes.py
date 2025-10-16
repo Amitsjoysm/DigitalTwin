@@ -124,3 +124,29 @@ async def get_my_voice(current_user: User = Depends(get_current_user)):
         "voice_id": current_user.voice_id,
         "message": "Voice clone ready"
     }
+
+@router.get("/file/{filename}")
+async def serve_voice_file(filename: str):
+    """Serve voice files with correct MIME types"""
+    file_path = UPLOAD_DIR / filename
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="Voice file not found")
+    
+    # Get MIME type
+    mime_type, _ = mimetypes.guess_type(str(file_path))
+    if not mime_type:
+        # Default MIME types for audio files
+        if filename.lower().endswith('.wav'):
+            mime_type = 'audio/wav'
+        elif filename.lower().endswith('.webm'):
+            mime_type = 'audio/webm'
+        elif filename.lower().endswith('.mp3'):
+            mime_type = 'audio/mpeg'
+        else:
+            mime_type = 'application/octet-stream'
+    
+    return FileResponse(
+        path=str(file_path),
+        media_type=mime_type,
+        filename=filename
+    )
