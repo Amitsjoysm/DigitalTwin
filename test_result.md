@@ -360,9 +360,6 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Voice Clone API Integration"
-    - "TTS with Cloned Voice"
-    - "Voice Recording Upload"
     - "Chat Message with Video Response"
     - "Video Response Display in Chat"
   stuck_tasks: []
