@@ -359,13 +359,40 @@ export const OnboardingFlow = ({ onComplete }) => {
                 </div>
                 
                 <div className="bg-muted rounded-lg p-4 text-sm">
-                  <h4 className="font-medium mb-2">Recording Guide:</h4>
-                  <ul className="space-y-1 text-muted-foreground">
-                    <li>• Neutral expression (30s)</li>
-                    <li>• Happy/Smiling (30s)</li>
-                    <li>• Thinking/Serious (30s)</li>
-                    <li>• Talking naturally (90s)</li>
-                  </ul>
+                  <h4 className="font-medium mb-2">Recording Instructions (78 seconds):</h4>
+                  <div className="grid grid-cols-2 gap-2 text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-primary">1.</span>
+                      <span>Look Straight (8s)</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-primary">2.</span>
+                      <span>Look Up (8s)</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-primary">3.</span>
+                      <span>Look Down (8s)</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-primary">4.</span>
+                      <span>Look Left (8s)</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-primary">5.</span>
+                      <span>Look Right (8s)</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-primary">6.</span>
+                      <span>Smile (8s)</span>
+                    </div>
+                    <div className="flex items-center gap-2 col-span-2">
+                      <span className="font-bold text-primary">7.</span>
+                      <span>Talk Naturally - Count 1-10 (30s)</span>
+                    </div>
+                  </div>
+                  <div className="mt-3 p-2 bg-blue-50 border border-blue-200 rounded text-xs text-blue-900">
+                    💡 <strong>Tip:</strong> Keep your face clearly visible and follow each instruction as it appears
+                  </div>
                 </div>
               </div>
             ) : (
