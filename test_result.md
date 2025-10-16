@@ -167,9 +167,9 @@ backend:
         
   - task: "TTS Service Integration"
     implemented: true
-    working: true
+    working: false
     file: "backend/services/tts_service.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
@@ -179,6 +179,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "Fixed polling endpoint to /api/getAsyncResult. TTS service is working correctly. Currently experiencing rate limiting (code 13015) which is expected with free tier usage. The API integration is correct."
+      - working: false
+        agent: "testing"
+        comment: "CRITICAL ISSUE IDENTIFIED: Newport AI TTS tasks are being created successfully (API responds with task IDs), but all tasks fail with status code 4 (system error) during polling. Direct API testing confirms this is not a code issue but a Newport AI service issue. Possible causes: API key problems, billing/account issues, or service availability. The integration code is correct - the issue is with the Newport AI service itself."
         
   - task: "Storage Service for File Upload"
     implemented: true
