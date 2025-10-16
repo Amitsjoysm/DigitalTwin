@@ -452,7 +452,7 @@ export const OnboardingFlow = ({ onComplete }) => {
                           <span className="text-lg font-medium">Recording...</span>
                         </div>
                         <div className="text-3xl font-mono">{formatTime(voiceRecordingTime)}</div>
-                        <Progress value={(voiceRecordingTime / 120) * 100} className="h-2" />
+                        <Progress value={(voiceRecordingTime / 50) * 100} className="h-2" />
                       </div>
                     ) : (
                       <div className="text-muted-foreground">
