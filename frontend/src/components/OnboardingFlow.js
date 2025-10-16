@@ -24,8 +24,43 @@ export const OnboardingFlow = ({ onComplete }) => {
   const [loading, setLoading] = useState(false);
   const { user, updateUser } = useAuth();
   
-  // Step 2: Video
-  const [videoFile, setVideoFile] = useState(null);
+  // Step 2: Video Recording
+  const webcamRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordedChunks, setRecordedChunks] = useState([]);
+  const [videoBlob, setVideoBlob] = useState(null);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const [currentExpression, setCurrentExpression] = useState(0);
+  const timerRef = useRef(null);
+  
+  const expressions = [
+    { name: 'Neutral', duration: 30, instruction: 'Look at the camera naturally' },
+    { name: 'Happy/Smiling', duration: 30, instruction: 'Smile and show happiness' },
+    { name: 'Thinking/Serious', duration: 30, instruction: 'Look thoughtful and serious' },
+    { name: 'Talking', duration: 90, instruction: 'Talk naturally about your day or interests' }
+  ];
+  
+  // Step 3: Voice Recording
+  const [isRecordingVoice, setIsRecordingVoice] = useState(false);
+  const [voiceBlob, setVoiceBlob] = useState(null);
+  const [voiceRecordingTime, setVoiceRecordingTime] = useState(0);
+  const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  const audioRecorderRef = useRef(null);
+  const voiceTimerRef = useRef(null);
+  
+  const readingTexts = [
+    "Hello, I am creating my digital self today.",
+    "Technology has transformed the way we communicate.",
+    "I enjoy exploring new ideas and learning every day.",
+    "The quick brown fox jumps over the lazy dog.",
+    "Artificial intelligence is reshaping our future.",
+    "I believe in the power of human creativity.",
+    "Every conversation is an opportunity to connect.",
+    "Life is a beautiful journey of discovery.",
+    "Innovation starts with asking the right questions.",
+    "Together we can build amazing things."
+  ];
   
   // Step 4: Personality
   const [personality, setPersonality] = useState({
