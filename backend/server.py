@@ -35,7 +35,40 @@ api_router = APIRouter(prefix="/api")
 # Mount uploads directory for serving files
 UPLOAD_DIR = Path(os.environ.get('UPLOAD_DIR', '/app/backend/uploads'))
 UPLOAD_DIR.mkdir(exist_ok=True, parents=True)
-app.mount("/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
+
+# Custom file serving with proper MIME types
+from fastapi.responses import FileResponse
+import mimetypes
+
+@app.get("/uploads/{filename}")
+async def serve_uploaded_file(filename: str):
+    """Serve uploaded files with correct MIME types"""
+    file_path = UPLOAD_DIR / filename
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="File not found")
+    
+    # Get MIME type
+    mime_type, _ = mimetypes.guess_type(str(file_path))
+    if not mime_type:
+        # Default MIME types for common file extensions
+        if filename.lower().endswith('.wav'):
+            mime_type = 'audio/wav'
+        elif filename.lower().endswith('.webm'):
+            mime_type = 'audio/webm'
+        elif filename.lower().endswith('.mp3'):
+            mime_type = 'audio/mpeg'
+        elif filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg'):
+            mime_type = 'image/jpeg'
+        elif filename.lower().endswith('.png'):
+            mime_type = 'image/png'
+        else:
+            mime_type = 'application/octet-stream'
+    
+    return FileResponse(
+        path=str(file_path),
+        media_type=mime_type,
+        filename=filename
+    )
 
 # Import and register route modules
 from routes.auth_routes import router as auth_router
