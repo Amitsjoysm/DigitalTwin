@@ -317,7 +317,9 @@ test_plan:
     - "Avatar Upload with Image Extraction"
     - "TTS Service Integration"
     - "Storage Service for File Upload"
-  stuck_tasks: []
+  stuck_tasks: 
+    - "TTS Service Integration"
+    - "Chat Message with Video Response"
   test_all: false
   test_priority: "high_first"
 
