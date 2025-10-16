@@ -49,8 +49,8 @@ async def upload_voice_sample(
         
         logger.info(f"Voice file saved locally: {file_path}")
         
-        # Create public URL for the voice file
-        voice_url = f"https://component-review-2.preview.emergentagent.com/uploads/{file_name}"
+        # Create public URL for the voice file using our API endpoint
+        voice_url = f"https://component-review-2.preview.emergentagent.com/api/voices/file/{file_name}"
         logger.info(f"Voice URL: {voice_url}")
         
         # Clone voice with Newport AI
