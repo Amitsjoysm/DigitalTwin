@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
+from fastapi.responses import FileResponse
 from models.user import User
 from routes.auth_routes import get_current_user
 from repositories.user_repository import UserRepository
@@ -10,6 +11,7 @@ import uuid
 from pathlib import Path
 import asyncio
 import logging
+import mimetypes
 
 logger = logging.getLogger(__name__)
 
