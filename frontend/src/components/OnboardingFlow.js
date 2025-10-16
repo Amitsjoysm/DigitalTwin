@@ -108,8 +108,8 @@ export const OnboardingFlow = ({ onComplete }) => {
           }
         }
         
-        // Auto-stop after 3 minutes
-        if (newTime >= 180) {
+        // Auto-stop after 78 seconds (total of all expressions)
+        if (newTime >= 78) {
           handleStopVideoRecording();
         }
         
