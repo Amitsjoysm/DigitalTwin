@@ -437,7 +437,7 @@ export const OnboardingFlow = ({ onComplete }) => {
               <Mic className="h-12 w-12 mx-auto text-primary" />
               <h3 className="text-2xl font-bold">Voice Training</h3>
               <p className="text-muted-foreground">
-                Read the following sentences to train your voice
+                Read 5 sentences clearly (~50 seconds)
               </p>
             </div>
             
