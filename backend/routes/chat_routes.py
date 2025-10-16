@@ -4,16 +4,23 @@ from models.conversation import MessageCreate, Message
 from routes.auth_routes import get_current_user
 from repositories.conversation_repository import ConversationRepository
 from repositories.user_repository import UserRepository
+from repositories.avatar_repository import AvatarRepository
 from services.llm_service import llm_service
 from services.knowledge_service import knowledge_service
 from services.video_service import video_service
+from services.tts_service import tts_service
 from services.cache_service import cache_service
 from server import db
 import time
+import logging
+import asyncio
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 conversation_repo = ConversationRepository(db)
 user_repo = UserRepository(db)
+avatar_repo = AvatarRepository(db)
 
 @router.post("/send")
 async def send_message(
