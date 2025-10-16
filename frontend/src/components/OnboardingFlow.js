@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
@@ -8,7 +8,8 @@ import { Input } from './ui/input';
 import { Slider } from './ui/slider';
 import { avatarAPI, userAPI } from '../services/api';
 import { toast } from 'sonner';
-import { Upload, Video, Mic, Settings, CheckCircle } from 'lucide-react';
+import Webcam from 'react-webcam';
+import { Video, Mic, Settings, CheckCircle, Circle, Square, Play } from 'lucide-react';
 
 const steps = [
   { id: 1, title: 'Profile Setup', icon: Settings },
