@@ -227,21 +227,7 @@ export const OnboardingFlow = ({ onComplete }) => {
   };
 
   const handleVideoUpload = async () => {
-    if (!videoFile) {
-      toast.error('Please select a video file');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const response = await avatarAPI.upload(videoFile);
-      toast.success('Video uploaded! Training started...');
-      nextStep();
-    } catch (error) {
-      toast.error('Failed to upload video');
-    } finally {
-      setLoading(false);
-    }
+    await handleUploadVideo();
   };
 
   const handlePersonalitySetup = async () => {
