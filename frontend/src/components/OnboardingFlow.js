@@ -475,12 +475,17 @@ export const OnboardingFlow = ({ onComplete }) => {
                 </div>
                 
                 <div className="bg-muted rounded-lg p-4">
-                  <h4 className="font-medium mb-2 text-sm">Preview Texts:</h4>
-                  <div className="space-y-1 text-xs text-muted-foreground max-h-32 overflow-y-auto">
-                    {readingTexts.slice(0, 5).map((text, idx) => (
-                      <p key={idx}>• {text}</p>
+                  <h4 className="font-medium mb-2 text-sm">📝 Sentences to Read:</h4>
+                  <div className="space-y-2 text-sm text-muted-foreground max-h-40 overflow-y-auto">
+                    {readingTexts.map((text, idx) => (
+                      <div key={idx} className="flex gap-2">
+                        <span className="font-bold text-primary min-w-[20px]">{idx + 1}.</span>
+                        <p className="flex-1">{text}</p>
+                      </div>
                     ))}
-                    <p className="text-xs opacity-60">...and {readingTexts.length - 5} more</p>
+                  </div>
+                  <div className="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs text-yellow-900">
+                    ⏱️ <strong>~8 seconds per sentence</strong> - Speak clearly and at a normal pace
                   </div>
                 </div>
                 
