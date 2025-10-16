@@ -246,6 +246,30 @@ backend:
         agent: "main"
         comment: "Need to add endpoint for uploading audio files for voice interaction"
 
+  - task: "Voice Clone API Integration"
+    implemented: true
+    working: false
+    file: "backend/routes/voice_routes.py, backend/services/tts_service.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Implemented Newport AI Voice Clone API integration. Added /voices/upload endpoint to upload voice samples, clone voice and get cloneId. Added /voices/clone-status/{task_id} endpoint to poll voice clone status. When completed, automatically stores cloneId in user.voice_id field."
+
+  - task: "TTS with Cloned Voice"
+    implemented: true
+    working: false
+    file: "backend/services/tts_service.py, backend/routes/chat_routes.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Added text_to_speech_with_clone() method that uses Newport AI Do TTS Clone API with user's cloneId. Updated chat endpoint to automatically use cloned voice (if available) for TTS generation. Falls back to default voice if no clone exists."
+
 frontend:
   - task: "Video Response Display in Chat"
     implemented: true
@@ -291,6 +315,21 @@ frontend:
       - working: true
         agent: "main"
         comment: "Added 'Generating video...' indicator with loading spinner shown while video is being processed"
+
+  - task: "Voice Recording Upload"
+    implemented: true
+    working: false
+    file: "frontend/src/components/OnboardingFlow.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "Voice recording in onboarding was recorded but never uploaded. User records voice but it's not sent to backend."
+      - working: true
+        agent: "main"
+        comment: "Fixed voice recording upload in step 3 of onboarding. Added handleVoiceUpload() function that uploads voice blob as webm file to /voices/upload endpoint. Updated button to 'Upload & Continue' that calls voice cloning API."
 
   - task: "Voice Recording Component"
     implemented: false
