@@ -28,7 +28,7 @@ async def send_message(
     message_data: MessageCreate,
     current_user: User = Depends(get_current_user)
 ):
-    """Send a message and get response"""
+    """Send a message and get AI response with video"""
     start_time = time.time()
     
     # Get conversation
@@ -79,14 +79,54 @@ async def send_message(
         personality_prompt
     )
     
-    # Generate video (background job)
-    video_job = None
+    # Generate video with Newport AI
+    video_task_id = None
     if current_user.avatar_id:
-        video_job = await video_service.generate_video(
-            current_user.avatar_id,
-            response_text,
-            emotion="neutral"
-        )
+        try:
+            # Get avatar data
+            avatar = await avatar_repo.find_by_id(current_user.avatar_id)
+            if avatar and avatar.image_url:
+                # Step 1: Convert text to speech
+                logger.info(f"Generating TTS for message: {response_text[:50]}...")
+                tts_result = await tts_service.text_to_speech(response_text)
+                
+                if tts_result.get('success'):
+                    tts_task_id = tts_result['task_id']
+                    
+                    # Poll for TTS completion (max 30 seconds)
+                    audio_url = None
+                    for _ in range(30):
+                        await asyncio.sleep(1)
+                        tts_status = await tts_service.check_tts_status(tts_task_id)
+                        if tts_status['status'] == 'completed':
+                            audio_url = tts_status['audio_url']
+                            break
+                        elif tts_status['status'] == 'failed':
+                            logger.error(f"TTS failed: {tts_status.get('error')}")
+                            break
+                    
+                    if audio_url:
+                        # Step 2: Generate video with DreamAvatar
+                        logger.info("Generating video with DreamAvatar...")
+                        video_result = await video_service.generate_video_from_image(
+                            image_url=avatar.image_url,
+                            audio_url=audio_url,
+                            prompt=f"{current_user.name} talking naturally"
+                        )
+                        
+                        if video_result.get('success'):
+                            video_task_id = video_result['task_id']
+                            logger.info(f"Video generation task created: {video_task_id}")
+                        else:
+                            logger.error(f"Video generation failed: {video_result.get('error')}")
+                    else:
+                        logger.error("TTS did not complete in time")
+                else:
+                    logger.error(f"TTS failed: {tts_result.get('error')}")
+            else:
+                logger.warning(f"No avatar image found for user {current_user.id}")
+        except Exception as e:
+            logger.error(f"Error generating video: {str(e)}")
     
     # Create assistant message
     response_time_ms = int((time.time() - start_time) * 1000)
@@ -99,15 +139,15 @@ async def send_message(
     
     return {
         "message": assistant_message,
-        "video_job_id": video_job["job_id"] if video_job else None,
+        "video_task_id": video_task_id,
         "knowledge_used": len(knowledge_results) > 0
     }
 
-@router.get("/video-status/{job_id}")
+@router.get("/video-status/{task_id}")
 async def get_video_status(
-    job_id: str,
+    task_id: str,
     current_user: User = Depends(get_current_user)
 ):
-    """Get video generation status"""
-    result = await video_service.check_job_status(job_id)
+    """Get video generation status from Newport AI"""
+    result = await video_service.check_task_status(task_id)
     return result
