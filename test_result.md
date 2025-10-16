@@ -389,3 +389,31 @@ agent_communication:
       🎯 INTEGRATION STATUS:
       All Newport AI integrations are correctly implemented and functional.
       The system is ready for production use, though may need paid Newport AI tier for consistent video generation.
+  
+  - agent: "testing"
+    message: |
+      🔍 COMPREHENSIVE BACKEND TESTING COMPLETED - Digital Self Chat Flow Analysis
+      
+      ✅ CORE FUNCTIONALITY WORKING:
+      - Authentication: User registration/login ✅
+      - Avatar Upload: Image extraction and local serving ✅  
+      - Conversation Management: Create/manage conversations ✅
+      - Basic Chat: Text messages with Groq LLM responses ✅
+      - API Integration: All endpoints responding correctly ✅
+      
+      ❌ CRITICAL ISSUE - NEWPORT AI TTS SERVICE FAILURE:
+      - TTS tasks are created successfully (API returns task IDs)
+      - All TTS tasks fail with status code 4 (system error) during polling
+      - Direct API testing confirms this is NOT a code integration issue
+      - Issue appears to be with Newport AI service itself (API key, billing, or service availability)
+      - This blocks the entire video generation pipeline
+      
+      ⚠️ INFRASTRUCTURE ISSUE:
+      - Redis service not running (affects health check but not core functionality)
+      - MongoDB working correctly
+      
+      🎯 FINAL STATUS:
+      - Text-based chat system is fully operational
+      - Video generation is blocked by Newport AI TTS service issues
+      - Integration code is correct and ready for production
+      - Need to resolve Newport AI service issues to enable video generation
