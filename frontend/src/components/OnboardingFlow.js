@@ -213,6 +213,8 @@ export const OnboardingFlow = ({ onComplete }) => {
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
+
+  const nextStep = () => {
     if (currentStep < steps.length) {
       setCurrentStep(currentStep + 1);
     }
