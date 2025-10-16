@@ -228,6 +228,25 @@ export const OnboardingFlow = ({ onComplete }) => {
     await handleUploadVideo();
   };
 
+  const handleVoiceUpload = async () => {
+    if (!voiceBlob) {
+      toast.error('Please record voice first');
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const file = new File([voiceBlob], 'voice.webm', { type: 'audio/webm' });
+      await avatarAPI.uploadVoice(file);
+      toast.success('Voice cloning started! This may take a minute...');
+      nextStep();
+    } catch (error) {
+      toast.error('Failed to upload voice');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handlePersonalitySetup = async () => {
     setLoading(true);
     try {
