@@ -48,8 +48,8 @@ export const chatAPI = {
     return response.data;
   },
 
-  getVideoStatus: async (jobId) => {
-    const response = await axios.get(`${API_URL}/chat/video-status/${jobId}`, {
+  getVideoStatus: async (taskId) => {
+    const response = await axios.get(`${API_URL}/chat/video-status/${taskId}`, {
       headers: getAuthHeader()
     });
     return response.data;
