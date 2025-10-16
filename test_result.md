@@ -248,15 +248,18 @@ backend:
 
   - task: "Voice Clone API Integration"
     implemented: true
-    working: false
+    working: true
     file: "backend/routes/voice_routes.py, backend/services/tts_service.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "Implemented Newport AI Voice Clone API integration. Added /voices/upload endpoint to upload voice samples, clone voice and get cloneId. Added /voices/clone-status/{task_id} endpoint to poll voice clone status. When completed, automatically stores cloneId in user.voice_id field."
+      - working: true
+        agent: "testing"
+        comment: "COMPREHENSIVE TESTING COMPLETED: ✅ POST /api/voices/upload works correctly - uploads 30-second audio files and creates Newport AI voice clone tasks. ✅ GET /api/voices/clone-status/{task_id} works correctly - polls Newport AI and returns clone status, automatically updates user.voice_id when completed. ✅ GET /api/voices/my-voice works correctly - returns user's cloned voice ID. ✅ File serving fixed with custom endpoint /api/voices/file/{filename} to serve audio files with correct MIME types. ✅ Newport AI voice cloning working with 30+ second audio files (requirement met). Integration is fully functional."
 
   - task: "TTS with Cloned Voice"
     implemented: true
