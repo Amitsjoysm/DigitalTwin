@@ -221,16 +221,49 @@ backend:
 
 frontend:
   - task: "Video Response Display in Chat"
-    implemented: false
+    implemented: true
     working: false
     file: "frontend/src/components/ChatInterface.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: false
         agent: "main"
         comment: "Chat only shows text messages. Need to add video player to display avatar responses"
+      - working: true
+        agent: "main"
+        comment: "Added video player component that displays generated videos, auto-plays when ready, and shows generating indicator"
+
+  - task: "Video Generation Status Polling"
+    implemented: true
+    working: false
+    file: "frontend/src/components/ChatInterface.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "Need to poll backend for video generation status and display video when ready"
+      - working: true
+        agent: "main"
+        comment: "Implemented polling mechanism that checks video status every 2 seconds for up to 60 seconds"
+
+  - task: "Loading/Generating Indicators"
+    implemented: true
+    working: false
+    file: "frontend/src/components/ChatInterface.js"
+    stuck_count: 0
+    priority: "low"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "Need to show clear indicators when video is being generated"
+      - working: true
+        agent: "main"
+        comment: "Added 'Generating video...' indicator with loading spinner shown while video is being processed"
 
   - task: "Voice Recording Component"
     implemented: false
@@ -243,30 +276,6 @@ frontend:
       - working: false
         agent: "main"
         comment: "Need to add voice recording capability for audio input"
-
-  - task: "Video Generation Status Polling"
-    implemented: false
-    working: false
-    file: "frontend/src/components/ChatInterface.js"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: false
-        agent: "main"
-        comment: "Need to poll backend for video generation status and display video when ready"
-
-  - task: "Loading/Generating Indicators"
-    implemented: false
-    working: false
-    file: "frontend/src/components/ChatInterface.js"
-    stuck_count: 0
-    priority: "low"
-    needs_retesting: false
-    status_history:
-      - working: false
-        agent: "main"
-        comment: "Need to show clear indicators when video is being generated"
 
 metadata:
   created_by: "main_agent"
