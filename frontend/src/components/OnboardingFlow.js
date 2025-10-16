@@ -276,41 +276,118 @@ export const OnboardingFlow = ({ onComplete }) => {
           <div className="space-y-4" data-testid="onboarding-step-2">
             <div className="text-center space-y-2">
               <Video className="h-12 w-12 mx-auto text-primary" />
-              <h3 className="text-2xl font-bold">Record Your Video</h3>
+              <h3 className="text-2xl font-bold">Record Your Avatar Video</h3>
               <p className="text-muted-foreground">
-                Upload a 2-3 minute video of yourself talking to the camera.
+                Record 2-3 minutes showing various facial expressions
               </p>
             </div>
-            <div className="border-2 border-dashed rounded-lg p-8 text-center">
-              <input
-                data-testid="video-upload-input"
-                type="file"
-                accept="video/*"
-                onChange={(e) => setVideoFile(e.target.files[0])}
-                className="hidden"
-                id="video-upload"
-              />
-              <label htmlFor="video-upload" className="cursor-pointer">
-                <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                <p className="text-sm font-medium">
-                  {videoFile ? videoFile.name : 'Click to upload video'}
-                </p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  MP4, WebM, or MOV (max 100MB)
-                </p>
-              </label>
-            </div>
+            
+            {!videoBlob ? (
+              <div className="space-y-4">
+                <div className="relative rounded-lg overflow-hidden bg-black aspect-video">
+                  <Webcam
+                    ref={webcamRef}
+                    audio={false}
+                    className="w-full h-full object-cover"
+                    mirrored
+                  />
+                  
+                  {isRecording && (
+                    <div className="absolute top-4 left-4 right-4">
+                      <div className="bg-black/70 backdrop-blur-sm rounded-lg p-4 text-white">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <Circle className="h-3 w-3 text-red-500 fill-red-500 animate-pulse" />
+                            <span className="text-sm font-medium">Recording</span>
+                          </div>
+                          <span className="text-lg font-mono">{formatTime(recordingTime)}</span>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-sm">
+                            <span>Expression {currentExpression + 1}/4</span>
+                            <span className="text-primary">{expressions[currentExpression].name}</span>
+                          </div>
+                          <div className="text-sm opacity-90">
+                            {expressions[currentExpression].instruction}
+                          </div>
+                          <Progress 
+                            value={(recordingTime / 180) * 100} 
+                            className="h-2"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="flex gap-2">
+                  {!isRecording ? (
+                    <Button
+                      onClick={handleStartVideoRecording}
+                      className="flex-1"
+                      data-testid="start-video-recording-button"
+                    >
+                      <Play className="h-4 w-4 mr-2" />
+                      Start Recording
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={handleStopVideoRecording}
+                      variant="destructive"
+                      className="flex-1"
+                      data-testid="stop-video-recording-button"
+                    >
+                      <Square className="h-4 w-4 mr-2" />
+                      Stop Recording
+                    </Button>
+                  )}
+                </div>
+                
+                <div className="bg-muted rounded-lg p-4 text-sm">
+                  <h4 className="font-medium mb-2">Recording Guide:</h4>
+                  <ul className="space-y-1 text-muted-foreground">
+                    <li>• Neutral expression (30s)</li>
+                    <li>• Happy/Smiling (30s)</li>
+                    <li>• Thinking/Serious (30s)</li>
+                    <li>• Talking naturally (90s)</li>
+                  </ul>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="relative rounded-lg overflow-hidden bg-black aspect-video">
+                  <video
+                    src={URL.createObjectURL(videoBlob)}
+                    controls
+                    className="w-full h-full"
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setVideoBlob(null);
+                      setRecordedChunks([]);
+                    }}
+                    className="flex-1"
+                  >
+                    Re-record
+                  </Button>
+                  <Button
+                    onClick={handleVideoUpload}
+                    disabled={loading}
+                    className="flex-1"
+                    data-testid="upload-video-button"
+                  >
+                    {loading ? 'Uploading...' : 'Upload & Continue'}
+                  </Button>
+                </div>
+              </div>
+            )}
+            
             <div className="flex gap-2">
               <Button variant="outline" onClick={prevStep} className="flex-1">
                 Back
-              </Button>
-              <Button
-                onClick={handleVideoUpload}
-                disabled={!videoFile || loading}
-                className="flex-1"
-                data-testid="upload-video-button"
-              >
-                {loading ? 'Uploading...' : 'Upload & Continue'}
               </Button>
             </div>
           </div>
