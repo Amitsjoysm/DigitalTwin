@@ -113,6 +113,29 @@ export const avatarAPI = {
     return response.data;
   },
 
+  uploadVoice: async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await axios.post(
+      `${API_URL}/voices/upload`,
+      formData,
+      {
+        headers: {
+          ...getAuthHeader(),
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+    );
+    return response.data;
+  },
+
+  getVoiceStatus: async (taskId) => {
+    const response = await axios.get(`${API_URL}/voices/clone-status/${taskId}`, {
+      headers: getAuthHeader()
+    });
+    return response.data;
+  },
+
   getStatus: async (avatarId) => {
     const response = await axios.get(`${API_URL}/avatars/status/${avatarId}`, {
       headers: getAuthHeader()
