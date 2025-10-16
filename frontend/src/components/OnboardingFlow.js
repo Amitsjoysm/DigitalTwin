@@ -297,24 +297,36 @@ export const OnboardingFlow = ({ onComplete }) => {
                   
                   {isRecording && (
                     <div className="absolute top-4 left-4 right-4">
-                      <div className="bg-black/70 backdrop-blur-sm rounded-lg p-4 text-white">
-                        <div className="flex items-center justify-between mb-2">
+                      <div className="bg-black/80 backdrop-blur-sm rounded-lg p-4 text-white">
+                        <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-2">
                             <Circle className="h-3 w-3 text-red-500 fill-red-500 animate-pulse" />
                             <span className="text-sm font-medium">Recording</span>
                           </div>
-                          <span className="text-lg font-mono">{formatTime(recordingTime)}</span>
+                          <span className="text-xl font-mono">{formatTime(recordingTime)}</span>
                         </div>
-                        <div className="space-y-2">
-                          <div className="flex justify-between text-sm">
-                            <span>Expression {currentExpression + 1}/4</span>
-                            <span className="text-primary">{expressions[currentExpression].name}</span>
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm opacity-80">Step {currentExpression + 1}/7</span>
+                            <span className="text-lg font-bold text-primary">{expressions[currentExpression].name}</span>
                           </div>
-                          <div className="text-sm opacity-90">
-                            {expressions[currentExpression].instruction}
+                          <div className="bg-white/10 rounded-lg p-3 text-center">
+                            <div className="text-2xl font-bold mb-1">
+                              {expressions[currentExpression].instruction}
+                            </div>
+                            <div className="text-sm opacity-75">
+                              {(() => {
+                                let elapsed = 0;
+                                for (let i = 0; i < currentExpression; i++) {
+                                  elapsed += expressions[i].duration;
+                                }
+                                const remaining = expressions[currentExpression].duration - (recordingTime - elapsed);
+                                return `${remaining}s remaining`;
+                              })()}
+                            </div>
                           </div>
                           <Progress 
-                            value={(recordingTime / 180) * 100} 
+                            value={(recordingTime / 78) * 100} 
                             className="h-2"
                           />
                         </div>
