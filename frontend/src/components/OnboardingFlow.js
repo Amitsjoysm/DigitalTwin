@@ -463,10 +463,11 @@ export const OnboardingFlow = ({ onComplete }) => {
                   
                   {isRecordingVoice && (
                     <div className="bg-background rounded-lg p-4 mt-4">
-                      <div className="text-xs text-muted-foreground mb-2">
-                        Text {currentTextIndex + 1} of {readingTexts.length}
+                      <div className="text-xs text-muted-foreground mb-2 flex justify-between">
+                        <span>Sentence {currentTextIndex + 1} of {readingTexts.length}</span>
+                        <span className="text-primary font-medium">Read clearly and naturally</span>
                       </div>
-                      <p className="text-lg text-center font-medium">
+                      <p className="text-xl text-center font-medium leading-relaxed">
                         "{readingTexts[currentTextIndex]}"
                       </p>
                     </div>
