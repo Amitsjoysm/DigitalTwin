@@ -281,7 +281,7 @@ export const OnboardingFlow = ({ onComplete }) => {
               <Video className="h-12 w-12 mx-auto text-primary" />
               <h3 className="text-2xl font-bold">Record Your Avatar Video</h3>
               <p className="text-muted-foreground">
-                Record 2-3 minutes showing various facial expressions
+                Follow the on-screen instructions for ~78 seconds
               </p>
             </div>
             
