@@ -86,9 +86,20 @@ async def send_message(
             # Get avatar data
             avatar = await avatar_repo.find_by_id(current_user.avatar_id)
             if avatar and avatar.image_url:
-                # Step 1: Convert text to speech
+                # Step 1: Convert text to speech (use cloned voice if available)
                 logger.info(f"Generating TTS for message: {response_text[:50]}...")
-                tts_result = await tts_service.text_to_speech(response_text)
+                
+                if current_user.voice_id:
+                    # Use cloned voice
+                    logger.info(f"Using cloned voice: {current_user.voice_id}")
+                    tts_result = await tts_service.text_to_speech_with_clone(
+                        text=response_text,
+                        clone_id=current_user.voice_id
+                    )
+                else:
+                    # Use default voice
+                    logger.info("Using default voice (no clone available)")
+                    tts_result = await tts_service.text_to_speech(response_text)
                 
                 if tts_result.get('success'):
                     tts_task_id = tts_result['task_id']
