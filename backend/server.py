@@ -1,4 +1,5 @@
 from fastapi import FastAPI, APIRouter
+from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -30,6 +31,11 @@ job_queue = Queue('digital_self', connection=redis_client)
 # Create the main app
 app = FastAPI(title="Digital Self Platform API")
 api_router = APIRouter(prefix="/api")
+
+# Mount uploads directory for serving files
+UPLOAD_DIR = Path(os.environ.get('UPLOAD_DIR', '/app/backend/uploads'))
+UPLOAD_DIR.mkdir(exist_ok=True, parents=True)
+app.mount("/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
 
 # Import and register route modules
 from routes.auth_routes import router as auth_router
