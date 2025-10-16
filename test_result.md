@@ -197,9 +197,9 @@ backend:
 
   - task: "Chat Message with Video Response"
     implemented: true
-    working: true
+    working: false
     file: "backend/routes/chat_routes.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
@@ -212,6 +212,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "Chat endpoint is working correctly. Groq LLM integration fixed (updated to llama-3.3-70b-versatile). Full pipeline works: message -> LLM response -> TTS -> video generation. Currently limited by Newport AI rate limits but integration is correct."
+      - working: false
+        agent: "testing"
+        comment: "DETAILED TESTING RESULTS: ✅ Basic chat works (LLM responses), ✅ Authentication works, ✅ Avatar upload works, ✅ Conversation creation works. ❌ VIDEO GENERATION FAILS: Newport AI TTS tasks are created successfully but fail with status code 4 (system error). This blocks the entire video pipeline. The integration code is correct, but Newport AI TTS service appears to have issues (possibly API key, billing, or service availability). Chat works for text-only responses."
 
   - task: "Avatar Upload with Image Extraction"
     implemented: true
