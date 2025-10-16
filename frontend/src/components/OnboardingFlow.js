@@ -554,11 +554,12 @@ export const OnboardingFlow = ({ onComplete }) => {
                     Re-record
                   </Button>
                   <Button 
-                    onClick={nextStep} 
+                    onClick={handleVoiceUpload}
+                    disabled={loading}
                     className="flex-1"
-                    data-testid="step-3-next-button"
+                    data-testid="upload-voice-button"
                   >
-                    Continue
+                    {loading ? 'Uploading & Cloning...' : 'Upload & Continue'}
                   </Button>
                 </div>
               </div>
