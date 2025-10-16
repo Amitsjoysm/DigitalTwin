@@ -85,7 +85,7 @@ async def upload_avatar_video(
     # Serve image locally instead of uploading to Newport AI
     # The image is already saved locally, we just need to create a public URL
     image_filename = image_path.name
-    public_image_url = f"https://codebase-explorer-25.preview.emergentagent.com/uploads/{image_filename}"
+    public_image_url = f"https://component-review-2.preview.emergentagent.com/uploads/{image_filename}"
     logger.info(f"Image will be served locally: {public_image_url}")
     
     # Create avatar record

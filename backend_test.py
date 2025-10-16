@@ -15,7 +15,7 @@ from PIL import Image
 import io
 
 # Configuration
-BASE_URL = "https://codebase-explorer-25.preview.emergentagent.com/api"
+BASE_URL = "https://component-review-2.preview.emergentagent.com/api"
 TEST_USER_EMAIL = "sarah.johnson@example.com"
 TEST_USER_PASSWORD = "SecurePass123!"
 TEST_USER_NAME = "Sarah Johnson"

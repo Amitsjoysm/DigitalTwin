@@ -325,7 +325,7 @@ yarn start
 ## Testing
 
 ### Manual Testing
-1. Visit: `https://codebase-explorer-25.preview.emergentagent.com`
+1. Visit: `https://component-review-2.preview.emergentagent.com`
 2. Create account
 3. Complete onboarding
 4. Upload avatar video
@@ -335,10 +335,10 @@ yarn start
 ### API Testing
 ```bash
 # Health check
-curl https://codebase-explorer-25.preview.emergentagent.com/api/health
+curl https://component-review-2.preview.emergentagent.com/api/health
 
 # Register
-curl -X POST https://codebase-explorer-25.preview.emergentagent.com/api/auth/register \
+curl -X POST https://component-review-2.preview.emergentagent.com/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{"name":"John Doe","email":"john@example.com","password":"password123"}'
 ```
