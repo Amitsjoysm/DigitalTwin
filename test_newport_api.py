@@ -40,6 +40,7 @@ async def test_newport_endpoints():
                         
                         # Test 2: Try different polling endpoints
                         polling_endpoints = [
+                            "https://api.newportai.com/api/getAsyncResult",
                             "https://api.newportai.com/api/async/results",
                             "https://api.newportai.com/api/results",
                             "https://api.newportai.com/api/async/status",
