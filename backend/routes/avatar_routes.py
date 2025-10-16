@@ -5,6 +5,7 @@ from routes.auth_routes import get_current_user
 from repositories.avatar_repository import AvatarRepository
 from repositories.user_repository import UserRepository
 from services.video_service import video_service
+from services.storage_service import storage_service
 from server import db
 import os
 import uuid
@@ -50,7 +51,7 @@ async def upload_avatar_video(
     file: UploadFile = File(...),
     current_user: User = Depends(get_current_user)
 ):
-    """Upload avatar training video and extract image for DreamAvatar"""
+    """Upload avatar training video/image and upload to Newport AI storage"""
     # Validate file type
     if not file.content_type.startswith('video/') and not file.content_type.startswith('image/'):
         raise HTTPException(
@@ -58,7 +59,7 @@ async def upload_avatar_video(
             detail="File must be a video or image"
         )
     
-    # Save file
+    # Save file locally first
     file_extension = file.filename.split('.')[-1]
     file_name = f"{uuid.uuid4()}.{file_extension}"
     file_path = UPLOAD_DIR / file_name
@@ -67,25 +68,41 @@ async def upload_avatar_video(
         content = await file.read()
         f.write(content)
     
-    # Extract image if video
-    image_url = None
+    logger.info(f"File saved locally: {file_path}")
+    
+    # Extract image if video, otherwise use the uploaded image
+    image_path = file_path
     if file.content_type.startswith('video/'):
         image_name = f"{uuid.uuid4()}.jpg"
         image_path = UPLOAD_DIR / image_name
-        if extract_frame_from_video(str(file_path), str(image_path)):
-            # In production, upload to CDN/S3 and get public URL
-            # For now, use local path
-            image_url = f"/uploads/{image_name}"
-            logger.info(f"Extracted frame from video: {image_url}")
-    else:
-        # If image uploaded directly
-        image_url = f"/uploads/{file_name}"
+        if not extract_frame_from_video(str(file_path), str(image_path)):
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to extract frame from video"
+            )
+        logger.info(f"Extracted frame from video: {image_path}")
+    
+    # Upload image to Newport AI storage
+    upload_result = await storage_service.upload_file(
+        str(image_path),
+        content_type="image/jpeg"
+    )
+    
+    if not upload_result.get('success'):
+        logger.error(f"Failed to upload to Newport AI: {upload_result.get('error')}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to upload image: {upload_result.get('error')}"
+        )
+    
+    public_image_url = upload_result['url']
+    logger.info(f"Image uploaded to Newport AI: {public_image_url}")
     
     # Create avatar record
     avatar = Avatar(
         user_id=current_user.id,
         video_path=str(file_path) if file.content_type.startswith('video/') else None,
-        image_url=image_url,
+        image_url=public_image_url,
         training_status="completed"  # No training needed for DreamAvatar
     )
     
@@ -94,12 +111,14 @@ async def upload_avatar_video(
     # Update user with avatar_id
     await user_repo.update(current_user.id, {"avatar_id": avatar.id})
     
+    logger.info(f"Avatar created for user {current_user.id}: {avatar.id}")
+    
     return AvatarResponse(
         id=avatar.id,
         user_id=avatar.user_id,
         training_status=avatar.training_status,
-        thumbnail_url=avatar.thumbnail_url,
-        image_url=avatar.image_url,
+        thumbnail_url=public_image_url,  # Use the public URL as thumbnail too
+        image_url=public_image_url,
         created_at=avatar.created_at
     )
 
