@@ -112,40 +112,73 @@ user_problem_statement: |
 
 backend:
   - task: "Newport AI DreamAvatar 3.0 Fast Integration"
-    implemented: false
+    implemented: true
     working: false
     file: "backend/services/video_service.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: false
         agent: "main"
         comment: "Currently mocked/simulated. Need to implement real Newport AI API calls using https://api.newportai.com/api/async/dreamavatar/image_to_video/3.0fast"
+      - working: true
+        agent: "main"
+        comment: "Implemented real Newport AI DreamAvatar 3.0 Fast integration with proper API calls, polling mechanism, and task status checking"
         
   - task: "LipSync API Integration"
-    implemented: false
+    implemented: true
     working: false
     file: "backend/services/video_service.py"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: false
         agent: "main"
         comment: "Need to implement LipSync API for video-to-video lip syncing"
+      - working: true
+        agent: "main"
+        comment: "Implemented LipSync API integration for future use"
 
   - task: "Polling API for Task Status"
-    implemented: false
+    implemented: true
     working: false
     file: "backend/services/video_service.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: false
         agent: "main"
         comment: "Need to implement polling mechanism to check video generation status"
+      - working: true
+        agent: "main"
+        comment: "Implemented polling mechanism using Newport AI's /api/async/results endpoint"
+        
+  - task: "TTS Service Integration"
+    implemented: true
+    working: false
+    file: "backend/services/tts_service.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Created TTS service using Newport AI TTS Pro API to convert text to speech"
+        
+  - task: "Storage Service for File Upload"
+    implemented: true
+    working: false
+    file: "backend/services/storage_service.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Implemented Newport AI storage service to upload files and get public URLs"
 
   - task: "Chat Message with Video Response"
     implemented: true
@@ -158,6 +191,21 @@ backend:
       - working: false
         agent: "main"
         comment: "Chat API exists but returns mock video job IDs. Need to integrate real Newport AI and return actual video URLs"
+      - working: true
+        agent: "main"
+        comment: "Updated chat endpoint to: 1) Convert text to speech using TTS, 2) Poll for audio completion, 3) Generate video with DreamAvatar, 4) Return video task_id for frontend polling"
+
+  - task: "Avatar Upload with Image Extraction"
+    implemented: true
+    working: false
+    file: "backend/routes/avatar_routes.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Updated avatar upload to extract frame from video, upload to Newport AI storage, and store public URL"
 
   - task: "Audio Upload Endpoint"
     implemented: false
