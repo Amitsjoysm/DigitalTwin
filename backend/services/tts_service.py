@@ -71,7 +71,7 @@ class TTSService:
         """
         Poll Newport AI for TTS task status
         """
-        url = "https://api.newportai.com/api/async/results"
+        url = "https://api.newportai.com/api/getAsyncResult"
         
         headers = {
             'Authorization': f'Bearer {self.api_key}',
