@@ -263,15 +263,18 @@ backend:
 
   - task: "TTS with Cloned Voice"
     implemented: true
-    working: false
+    working: true
     file: "backend/services/tts_service.py, backend/routes/chat_routes.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "Added text_to_speech_with_clone() method that uses Newport AI Do TTS Clone API with user's cloneId. Updated chat endpoint to automatically use cloned voice (if available) for TTS generation. Falls back to default voice if no clone exists."
+      - working: true
+        agent: "testing"
+        comment: "INTEGRATION TESTING COMPLETED: ✅ text_to_speech_with_clone() method working correctly with Newport AI Do TTS Clone API. ✅ Chat endpoint correctly detects when user has voice_id and automatically uses cloned voice for TTS generation. ✅ Backend logs confirm: 'Using cloned voice: e014b6fd82934d0ca509d5de4ce703f2' and 'TTS Clone generation started/completed'. ✅ Fallback to default voice works when no clone exists. Complete integration working as designed."
 
 frontend:
   - task: "Video Response Display in Chat"
