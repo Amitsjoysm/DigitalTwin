@@ -9,7 +9,7 @@ class LLMService:
         self.client = Groq(
             api_key=os.environ.get('GROQ_API_KEY')
         )
-        self.model = "llama-3.1-70b-versatile"
+        self.model = "llama-3.3-70b-versatile"
     
     def generate_personality_prompt(self, user_data: dict) -> str:
         """Generate system prompt based on user personality"""
