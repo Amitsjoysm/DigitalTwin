@@ -70,7 +70,149 @@ export const OnboardingFlow = ({ onComplete }) => {
     humor: 5
   });
 
-  const nextStep = () => {
+  // Video Recording Functions
+  const handleStartVideoRecording = useCallback(() => {
+    setRecordedChunks([]);
+    setIsRecording(true);
+    setRecordingTime(0);
+    setCurrentExpression(0);
+    
+    const stream = webcamRef.current.stream;
+    mediaRecorderRef.current = new MediaRecorder(stream, {
+      mimeType: 'video/webm'
+    });
+    
+    mediaRecorderRef.current.addEventListener('dataavailable', (event) => {
+      if (event.data.size > 0) {
+        setRecordedChunks((prev) => prev.concat(event.data));
+      }
+    });
+    
+    mediaRecorderRef.current.start();
+    
+    // Timer
+    timerRef.current = setInterval(() => {
+      setRecordingTime((prev) => {
+        const newTime = prev + 1;
+        
+        // Auto-advance expressions
+        let totalTime = 0;
+        for (let i = 0; i < expressions.length; i++) {
+          totalTime += expressions[i].duration;
+          if (newTime <= totalTime) {
+            setCurrentExpression(i);
+            break;
+          }
+        }
+        
+        // Auto-stop after 3 minutes
+        if (newTime >= 180) {
+          handleStopVideoRecording();
+        }
+        
+        return newTime;
+      });
+    }, 1000);
+  }, [webcamRef]);
+  
+  const handleStopVideoRecording = useCallback(() => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+      clearInterval(timerRef.current);
+      
+      // Create blob after recording stops
+      setTimeout(() => {
+        setRecordedChunks((chunks) => {
+          if (chunks.length > 0) {
+            const blob = new Blob(chunks, { type: 'video/webm' });
+            setVideoBlob(blob);
+            toast.success('Video recorded successfully!');
+          }
+          return chunks;
+        });
+      }, 100);
+    }
+  }, [isRecording]);
+  
+  const handleUploadVideo = async () => {
+    if (!videoBlob) {
+      toast.error('Please record a video first');
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const file = new File([videoBlob], 'avatar.webm', { type: 'video/webm' });
+      await avatarAPI.upload(file);
+      toast.success('Video uploaded! Training started...');
+      nextStep();
+    } catch (error) {
+      toast.error('Failed to upload video');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  // Voice Recording Functions
+  const handleStartVoiceRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioRecorderRef.current = new MediaRecorder(stream);
+      const chunks = [];
+      
+      audioRecorderRef.current.addEventListener('dataavailable', (event) => {
+        chunks.push(event.data);
+      });
+      
+      audioRecorderRef.current.addEventListener('stop', () => {
+        const blob = new Blob(chunks, { type: 'audio/webm' });
+        setVoiceBlob(blob);
+        stream.getTracks().forEach(track => track.stop());
+        toast.success('Voice recorded successfully!');
+      });
+      
+      audioRecorderRef.current.start();
+      setIsRecordingVoice(true);
+      setVoiceRecordingTime(0);
+      setCurrentTextIndex(0);
+      
+      // Timer
+      voiceTimerRef.current = setInterval(() => {
+        setVoiceRecordingTime((prev) => {
+          const newTime = prev + 1;
+          
+          // Auto-advance text every 10 seconds
+          if (newTime % 10 === 0 && currentTextIndex < readingTexts.length - 1) {
+            setCurrentTextIndex(prev => prev + 1);
+          }
+          
+          // Auto-stop after 2 minutes
+          if (newTime >= 120) {
+            handleStopVoiceRecording();
+          }
+          
+          return newTime;
+        });
+      }, 1000);
+    } catch (error) {
+      toast.error('Failed to access microphone');
+    }
+  };
+  
+  const handleStopVoiceRecording = () => {
+    if (audioRecorderRef.current && isRecordingVoice) {
+      audioRecorderRef.current.stop();
+      setIsRecordingVoice(false);
+      clearInterval(voiceTimerRef.current);
+    }
+  };
+  
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
     if (currentStep < steps.length) {
       setCurrentStep(currentStep + 1);
     }
