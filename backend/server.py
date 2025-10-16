@@ -41,6 +41,7 @@ app.mount("/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
 from routes.auth_routes import router as auth_router
 from routes.user_routes import router as user_router
 from routes.avatar_routes import router as avatar_router
+from routes.voice_routes import router as voice_router
 from routes.conversation_routes import router as conversation_router
 from routes.knowledge_routes import router as knowledge_router
 from routes.chat_routes import router as chat_router
@@ -48,6 +49,7 @@ from routes.chat_routes import router as chat_router
 api_router.include_router(auth_router, prefix="/auth", tags=["Authentication"])
 api_router.include_router(user_router, prefix="/users", tags=["Users"])
 api_router.include_router(avatar_router, prefix="/avatars", tags=["Avatars"])
+api_router.include_router(voice_router, prefix="/voices", tags=["Voice Cloning"])
 api_router.include_router(conversation_router, prefix="/conversations", tags=["Conversations"])
 api_router.include_router(knowledge_router, prefix="/knowledge", tags=["Knowledge Base"])
 api_router.include_router(chat_router, prefix="/chat", tags=["Chat"])
