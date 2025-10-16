@@ -8,7 +8,8 @@ class Avatar(BaseModel):
     
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     user_id: str
-    video_path: str
+    video_path: Optional[str] = None
+    image_url: Optional[str] = None  # For DreamAvatar 3.0 Fast
     training_status: str = "pending"  # pending, processing, completed, failed
     newport_avatar_id: Optional[str] = None
     thumbnail_url: Optional[str] = None
@@ -17,11 +18,13 @@ class Avatar(BaseModel):
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class AvatarCreate(BaseModel):
-    video_path: str
+    video_path: Optional[str] = None
+    image_url: Optional[str] = None
 
 class AvatarResponse(BaseModel):
     id: str
     user_id: str
     training_status: str
     thumbnail_url: Optional[str] = None
+    image_url: Optional[str] = None
     created_at: datetime
