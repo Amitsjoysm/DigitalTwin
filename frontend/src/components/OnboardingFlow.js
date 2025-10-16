@@ -180,13 +180,13 @@ export const OnboardingFlow = ({ onComplete }) => {
         setVoiceRecordingTime((prev) => {
           const newTime = prev + 1;
           
-          // Auto-advance text every 10 seconds
-          if (newTime % 10 === 0 && currentTextIndex < readingTexts.length - 1) {
+          // Auto-advance text every 8 seconds
+          if (newTime % 8 === 0 && currentTextIndex < readingTexts.length - 1) {
             setCurrentTextIndex(prev => prev + 1);
           }
           
-          // Auto-stop after 2 minutes
-          if (newTime >= 120) {
+          // Auto-stop after 50 seconds (5 texts * 8 seconds + 10s buffer)
+          if (newTime >= 50) {
             handleStopVoiceRecording();
           }
           
