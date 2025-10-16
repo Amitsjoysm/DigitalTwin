@@ -35,10 +35,13 @@ export const OnboardingFlow = ({ onComplete }) => {
   const timerRef = useRef(null);
   
   const expressions = [
-    { name: 'Neutral', duration: 30, instruction: 'Look at the camera naturally' },
-    { name: 'Happy/Smiling', duration: 30, instruction: 'Smile and show happiness' },
-    { name: 'Thinking/Serious', duration: 30, instruction: 'Look thoughtful and serious' },
-    { name: 'Talking', duration: 90, instruction: 'Talk naturally about your day or interests' }
+    { name: 'Look Straight', duration: 8, instruction: 'Look directly at the camera, stay still' },
+    { name: 'Look Up', duration: 8, instruction: 'Move your head and look up' },
+    { name: 'Look Down', duration: 8, instruction: 'Move your head and look down' },
+    { name: 'Look Left', duration: 8, instruction: 'Turn your head and look left' },
+    { name: 'Look Right', duration: 8, instruction: 'Turn your head and look right' },
+    { name: 'Smile', duration: 8, instruction: 'Smile naturally while looking at camera' },
+    { name: 'Talk Naturally', duration: 30, instruction: 'Speak naturally - count 1 to 10 or say your name' }
   ];
   
   // Step 3: Voice Recording
